@@ -1,30 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>College Project</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 2em; background-color: #f9f9f9; }
-        h1 { color: #333; }
-        ul { list-style-type: none; padding: 0; }
-        li { margin: 0.5em 0; }
-        .button {
-            margin-top: 2em;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College Project – Home Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #0055aa;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .team-section {
+      margin-top: 30px;
+    }
+
+    .team-section h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .team-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .team-card h3 {
+      margin: 10px 0 0;
+    }
+
+    .blog-button {
+      display: inline-block;
+      margin-top: 30px;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .blog-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
+
+  <header>
     <h1>College Project – Home Page</h1>
-    <h2>Team Members:</h2>
-    <ul>
-        {% for member in team %}
-            <li>{{ member }}</li>
-        {% endfor %}
-    </ul>
-    <a href="/blog" class="button">Read Our Blog</a>
+    <p>Welcome to our project website!</p>
+  </header>
+
+  <div class="container">
+    <div class="team-section">
+      <h2>Meet Our Team</h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <h3>Arslan</h3>
+        </div>
+        <div class="team-card">
+          <h3>Muneer</h3>
+        </div>
+        <div class="team-card">
+          <h3>Mahima</h3>
+        </div>
+        <div class="team-card">
+          <h3>Sakshi</h3>
+        </div>
+      </div>
+    </div>
+
+    <a href="/blog" class="blog-button">Read Our Blog</a>
+  </div>
+
 </body>
 </html>
