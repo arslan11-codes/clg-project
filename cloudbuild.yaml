@@ -17,3 +17,6 @@ steps:
 
 images:
   - 'asia-south1-docker.pkg.dev/muneer-testing/clg-project-arslan/cloud-run-arslan:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
