@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Project</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2em; background-color: #f9f9f9; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin: 0.5em 0; }
+        .button {
+            margin-top: 2em;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>College Project – Home Page</h1>
+    <h2>Team Members:</h2>
+    <ul>
+        {% for member in team %}
+            <li>{{ member }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/blog" class="button">Read Our Blog</a>
+</body>
+</html>
