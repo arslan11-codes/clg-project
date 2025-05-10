@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Auto-Deploy to Cloud Run with Cloud Build</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auto-Deploy to Cloud Run Using Cloud Build</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; line-height: 1.6; }
+    h1, h2, h3 { color: #2c3e50; }
+    code, pre { background: #f4f4f4; padding: 0.5rem; display: block; white-space: pre-wrap; }
+    .step { margin-bottom: 2rem; }
+  </style>
 </head>
 <body>
-    <h1>🚀 Auto-Deploy to Cloud Run with Cloud Build on Git Push – Step-by-Step Guide</h1>
-    <p>In today’s DevOps-driven world, automating deployments is essential for speed, reliability, and scalability. In this guide, you'll learn how to automatically deploy an application to Google Cloud Run using Cloud Build, triggered whenever new changes are pushed to your Git repository.</p>
 
-    <p>This setup ensures your application is always up to date in production, with no manual steps involved.</p>
+<h1>🚀 Auto-Deploy to Cloud Run with Cloud Build on Git Push – Step-by-Step Guide</h1>
 
-    <h2>🔧 Prerequisites</h2>
-    <ul>
-        <li>A Google Cloud Project with billing enabled</li>
-        <li><code>gcloud</code> CLI installed and initialized</li>
-        <li>A GitHub or Cloud Source Repository containing your app code</li>
-        <li>A Dockerfile (or a standard runtime like Node.js, Python, etc.)</li>
-        <li>Basic IAM permissions: Cloud Build Editor, Cloud Run Admin, Service Account User</li>
-    </ul>
+<p>In today’s DevOps-driven world, automating deployments is essential for speed, reliability, and scalability. In this guide, you'll learn how to automatically deploy an application to Google Cloud Run using Cloud Build, triggered whenever new changes are pushed to your Git repository.</p>
 
-    <h2>✅ Step 1: Enable Required Google Cloud APIs</h2>
-    <pre><code>gcloud services enable \
+<h2>🔧 Prerequisites</h2>
+<ul>
+  <li>A Google Cloud Project with billing enabled</li>
+  <li>gcloud CLI installed and initialized</li>
+  <li>A GitHub or Cloud Source Repository with your app code</li>
+  <li>A Dockerfile or a standard app structure (e.g., Node.js, Python)</li>
+  <li>IAM Roles: Cloud Build Editor, Cloud Run Admin, Service Account User</li>
+</ul>
+
+<div class="step">
+  <h2>✅ Step 1: Enable Required Google Cloud APIs</h2>
+  <pre><code>gcloud services enable \
   run.googleapis.com \
   cloudbuild.googleapis.com \
-  artifactregistry.googleapis.com
-</code></pre>
+  artifactregistry.googleapis.com</code></pre>
+</div>
 
-    <h2>🗂️ Step 2: Prepare Your Application and Repository</h2>
-    <p>Let’s create a simple app (Python example):</p>
-
-    <h3><code>main.py</code></h3>
-    <pre><code>from flask import Flask
+<div class="step">
+  <h2>🗂️ Step 2: Prepare Your Application and Repository</h2>
+  <h3>main.py</h3>
+  <pre><code>from flask import Flask
 app = Flask(__name__)
 
 @app.route('/')
@@ -40,19 +47,21 @@ def hello():
 if __name__ == '__main__':
     app.run()</code></pre>
 
-    <h3><code>requirements.txt</code></h3>
-    <pre><code>flask</code></pre>
+  <h3>requirements.txt</h3>
+  <pre><code>flask</code></pre>
 
-    <h3><code>Dockerfile</code></h3>
-    <pre><code>FROM python:3.10-slim
+  <h3>Dockerfile</h3>
+  <pre><code>FROM python:3.10-slim
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
 CMD ["python", "main.py"]</code></pre>
+</div>
 
-    <h2>🛠️ Step 3: Add Cloud Build Configuration (cloudbuild.yaml)</h2>
-    <p>Create a file named <code>cloudbuild.yaml</code> in your project root:</p>
-    <pre><code>steps:
+<div class="step">
+  <h2>🛠️ Step 3: Add Cloud Build Configuration</h2>
+  <h3>cloudbuild.yaml</h3>
+  <pre><code>steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/my-app', '.']
 
@@ -68,18 +77,21 @@ CMD ["python", "main.py"]</code></pre>
         '--region', 'us-central1',
         '--platform', 'managed',
         '--allow-unauthenticated'
-      ]
-</code></pre>
+      ]</code></pre>
+</div>
 
-    <h2>🌐 Step 4: Push Your Code to GitHub or Cloud Source Repositories</h2>
-    <pre><code>git init
+<div class="step">
+  <h2>🌐 Step 4: Push Your Code to Git</h2>
+  <pre><code>git init
 git remote add origin https://github.com/your-user/your-repo.git
 git add .
 git commit -m "Initial commit"
 git push -u origin main</code></pre>
+</div>
 
-    <h2>🔐 Step 5: Grant IAM Permissions to Cloud Build</h2>
-    <pre><code>PROJECT_ID=$(gcloud config get-value project)
+<div class="step">
+  <h2>🔐 Step 5: Grant IAM Permissions to Cloud Build</h2>
+  <pre><code>PROJECT_ID=$(gcloud config get-value project)
 PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
@@ -89,63 +101,52 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
   --role="roles/iam.serviceAccountUser"</code></pre>
+</div>
 
-    <h2>🔄 Step 6: Create a Cloud Build Trigger</h2>
-    <h3>🧭 Steps to Create Trigger via Cloud Console:</h3>
-    <ol>
-        <li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers" target="_blank">Cloud Console → Cloud Build → Triggers</a></li>
-        <li>Click <strong>Create Trigger</strong></li>
-        <li><strong>Repository Type:</strong> GitHub (or Cloud Source Repositories)</li>
-        <li><strong>Repository:</strong> Choose your linked repo</li>
-        <li><strong>Trigger Name:</strong> auto-deploy-cloudrun</li>
-        <li><strong>Event:</strong> Push to a branch</li>
-        <li><strong>Branch (Regex):</strong> <code>^main$</code></li>
-        <li><strong>Build Configuration:</strong> <code>cloudbuild.yaml</code> at root</li>
-        <li>Click <strong>Create</strong></li>
-    </ol>
+<div class="step">
+  <h2>🔄 Step 6: Create a Cloud Build Trigger</h2>
+  <ol>
+    <li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers" target="_blank">Cloud Build → Triggers</a></li>
+    <li>Click <strong>Create Trigger</strong></li>
+    <li><strong>Source</strong>: Select GitHub or Cloud Source Repositories</li>
+    <li><strong>Repository</strong>: Connect and choose your repo</li>
+    <li><strong>Event</strong>: Push to a branch</li>
+    <li><strong>Branch Regex</strong>: <code>^main$</code></li>
+    <li><strong>Configuration</strong>: Use cloudbuild.yaml</li>
+    <li>Click <strong>Create</strong></li>
+  </ol>
+</div>
 
-    <p><strong>✅ Result:</strong> Your app will now build and deploy automatically when new commits are pushed to the main branch.</p>
-
-    <h2>🧪 Step 7: Test the CI/CD Pipeline</h2>
-    <pre><code>git add .
+<div class="step">
+  <h2>🧪 Step 7: Test the CI/CD Pipeline</h2>
+  <pre><code>git add .
 git commit -m "Update hello message"
 git push origin main</code></pre>
 
-    <p>Watch the build in <strong>Cloud Console → Cloud Build → History</strong>.</p>
+  <p>Go to <strong>Cloud Build → History</strong> to view logs and confirm deployment.</p>
+</div>
 
-    <h2>🌍 Step 8: Access Your Cloud Run App</h2>
-    <pre><code>gcloud run services describe my-app \
+<div class="step">
+  <h2>🌍 Step 8: Access Your Cloud Run App</h2>
+  <pre><code>gcloud run services describe my-app \
   --region us-central1 \
   --platform managed \
   --format='value(status.url)'</code></pre>
-    <p>Open the URL in your browser—you should see your updated app live!</p>
+  <p>Open the returned URL in a browser to see your deployed app live!</p>
+</div>
 
-    <h2>📌 Summary</h2>
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr><th>Step</th><th>Task</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>✅ 1</td><td>Enable APIs</td></tr>
-            <tr><td>✅ 2</td><td>Prepare your app and repo</td></tr>
-            <tr><td>✅ 3</td><td>Add cloudbuild.yaml</td></tr>
-            <tr><td>✅ 4</td><td>Push to Git</td></tr>
-            <tr><td>✅ 5</td><td>Set IAM permissions</td></tr>
-            <tr><td>✅ 6</td><td>Create Cloud Build trigger</td></tr>
-            <tr><td>✅ 7</td><td>Push code and test</td></tr>
-            <tr><td>✅ 8</td><td>Access your live Cloud Run service</td></tr>
-        </tbody>
-    </table>
+<h2>✅ Summary</h2>
+<ul>
+  <li>Enabled necessary Google Cloud APIs</li>
+  <li>Created a Dockerized Flask app</li>
+  <li>Wrote a Cloud Build config (cloudbuild.yaml)</li>
+  <li>Granted deployment permissions to Cloud Build</li>
+  <li>Set up a Git-based Cloud Build Trigger</li>
+  <li>Tested automatic deployment on Git push</li>
+</ul>
 
-    <h2>🎯 Conclusion</h2>
-    <p>You now have a complete, production-grade CI/CD pipeline using:</p>
-    <ul>
-        <li><strong>Google Cloud Run</strong> – scalable serverless platform</li>
-        <li><strong>Cloud Build</strong> – automated build/deploy service</li>
-        <li><strong>Git</strong> – version-controlled code as the trigger</li>
-    </ul>
-    <p>Every push to your GitHub main branch now results in an automatic build and deployment to Cloud Run, with no manual steps required.</p>
+<h2>🎯 Conclusion</h2>
+<p>You now have a fully automated CI/CD pipeline on Google Cloud using Cloud Build and Cloud Run. Every code push triggers a build and deploy, making your production release process fast, repeatable, and hands-free.</p>
 
-    <p>🔄 Modern DevOps starts with automation. This setup gets you there—fast.</p>
 </body>
 </html>
