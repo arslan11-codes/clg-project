@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    team_members = ["Arslan", "Muneer", "Mahima", "Sakshi"]
+    team_members = ["Arslan", "Muneer", "Mahima", "Shakshi"]
     return render_template('home.html', team=team_members)
 
 @app.route('/blog')
